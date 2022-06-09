@@ -39,9 +39,9 @@ def setup_logger():
 
 
 def help(update, context):
-    update.message.reply_text('DeerWords Komut Listesi:\n' +
-                              '/basla - Yeni Bir Oyun Başlatın\n' +
-                              '/master - Sunucu Olmak\n' +
+    update.message.reply_text('QafqazCro Komut Listesi:\n' +
+                              '/game - Yeni Bir Oyun Başlatın\n' +
+                              '/qgeme - Sunucu Olmak\n' +
                               '/rating - Skor Tablosu', reply_to_message_id=True)
 
 
@@ -54,12 +54,12 @@ def button(update, context):
 
     query = update.callback_query
 
-    if query.data == 'show_word':
+    if query.data == 'sratinq':
         word = game.get_word(user_id)
         if game.is_master(query.from_user.id):
             bot.answer_callback_query(callback_query_id=query.id, text=word, show_alert=True)
 
-    if query.data == 'change_word':
+    if query.data == 'cratinq':
         word = game.change_word(user_id)
         if game.is_master(query.from_user.id):
             bot.answer_callback_query(callback_query_id=query.id, text=word, show_alert=True)
@@ -68,19 +68,19 @@ def button(update, context):
 def command_start(update, context: CallbackContext):
     if update.effective_chat.type == "private":
         
-        addme = InlineKeyboardButton(text="🕹Beni Bir Gruba Ekleyin!", url="https://t.me/deerwordbot?startgroup=a")
-        sohbet = InlineKeyboardButton(text="💬Sohbet Grubumuz", url="https://t.me/geyiklobisi")
-        admin = InlineKeyboardButton(text="💂 Sahibim", url="https://t.me/ixelizm")
+        addme = InlineKeyboardButton(text="🕹Beni Bir Gruba Ekleyin!", url="https://t.me/qafqazcrobot?startgroup=a")
+        sohbet = InlineKeyboardButton(text="💬Sohbet Grubumuz", url="https://t.me/azeqafqaz2021")
+        admin = InlineKeyboardButton(text="💂 Sahibim", url="https://t.me/azzardi")
 
         keyboard = [[addme],[sohbet],[admin]]
         reply_markup = InlineKeyboardMarkup(keyboard)
-        update.message.reply_text('Özel Mesajda Oyun Başlatılamaz!', reply_to_message_id=True, reply_markup=reply_markup)
+        update.message.reply_text('Özəl Mesajda Oyun Başladılamaz!', reply_to_message_id=True, reply_markup=reply_markup)
     else:
         chat_id = update.message.chat.id
         user_id = update.message.from_user.id
         username = update.message.from_user.full_name
 
-        logger.info('Got command /basla,'
+        logger.info('Got command /game,'
                     'chat_id={},'
                     'user_id'.format(chat_id,
                                      user_id))
@@ -88,7 +88,7 @@ def command_start(update, context: CallbackContext):
         game = get_or_create_game(chat_id)
         game.start()
 
-        update.message.reply_text('DeerWord Oyunu Başladı📣'.format(username), reply_to_message_id=True)
+        update.message.reply_text('QafqazCro Oyunu Başladı📣'.format(username), reply_to_message_id=True)
 
         set_master(update, context)
 
@@ -105,8 +105,8 @@ def set_master(update, context):
 
     game.set_master(update.message.from_user.id)
 
-    show_word_btn = InlineKeyboardButton("🔔Kelimeyi Göster", callback_data='show_word')
-    change_word_btn = InlineKeyboardButton("❗Kelimeyi Değiştir", callback_data='change_word')
+    show_word_btn = InlineKeyboardButton("🔔Sözü Göster", callback_data='show_word')
+    change_word_btn = InlineKeyboardButton("❗Sözü Değiştir", callback_data='change_word')
 
     keyboard = [[show_word_btn], [change_word_btn]]
     reply_markup = InlineKeyboardMarkup(keyboard)
@@ -128,7 +128,7 @@ def command_master(update: Update, context):
                                   reply_to_message_id=True)
         return
 
-    logger.info('Got command /master,'
+    logger.info('Got command /qgame,'
                 'chat_id={},'
                 'user="{}"({}),'
                 'timedelta={}'.format(chat_id,
@@ -146,7 +146,7 @@ def command_show_word(update, context):
     game = get_or_create_game(chat_id)
     word = game.get_word(user_id)
 
-    logger.info('Got command /show_word, ' 
+    logger.info('Got command /sratinq, ' 
                 'chat_id={}, '
                 'user="{}"({}),'
                 'is_user_master={},'
@@ -167,7 +167,7 @@ def command_change_word(update, context):
 
     word = game.change_word(user_id)
 
-    logger.info('Got command /change_word,'
+    logger.info('Got command /cratinq,'
                 'chat_id={},'
                 'user="{}"({}),'
                 'is_user_master={},'
@@ -235,10 +235,10 @@ def main():
 
     dp = updater.dispatcher
 
-    dp.add_handler(CommandHandler("basla", command_start))
-    dp.add_handler(CommandHandler("master", command_master))
-    dp.add_handler(CommandHandler("show_word", command_show_word))
-    dp.add_handler(CommandHandler("change_word", command_change_word))
+    dp.add_handler(CommandHandler("game", command_start))
+    dp.add_handler(CommandHandler("qgame", command_master))
+    dp.add_handler(CommandHandler("sratinq", command_show_word))
+    dp.add_handler(CommandHandler("cratinq", command_change_word))
     dp.add_handler(CommandHandler("rating", command_rating))
     dp.add_handler(CommandHandler("help", help))
     dp.add_handler(CommandHandler("start", command_start))
